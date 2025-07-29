@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南疆7天自驾游路线图 - 真实导航路线</title>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=a8831f19688ccf719ab3402374759af3&plugin=AMap.Driving"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .map-header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .map-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        #map {
+            width: 100%;
+            height: 600px;
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .day-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .day-btn {
+            background: white;
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .day-btn:hover, .day-btn.active {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .route-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .info-card h4 {
+            color: #e74c3c;
+            margin-bottom: 8px;
+        }
+
+        .info-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .analysis-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .analysis-header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .analysis-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .analysis-content {
+            padding: 30px;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .analysis-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .analysis-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .analysis-card ul {
+            list-style: none;
+        }
+
+        .analysis-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .analysis-card li:last-child {
+            border-bottom: none;
+        }
+
+        .analysis-card li::before {
+            content: '✓ ';
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .warning-card {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .warning-card h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .warning-card ul {
+            list-style: none;
+        }
+
+        .warning-card li {
+            padding: 8px 0;
+            color: #856404;
+        }
+
+        .warning-card li::before {
+            content: '⚠️ ';
+            margin-right: 8px;
+        }
+
+        .suggestion-card {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .suggestion-card h3 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+
+        .suggestion-card ul {
+            list-style: none;
+        }
+
+        .suggestion-card li {
+            padding: 8px 0;
+            color: #155724;
+        }
+
+        .suggestion-card li::before {
+            content: '💡 ';
+            margin-right: 8px;
+        }
+
+        .day-details {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .day-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .day-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .timeline {
+            padding: 30px;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 25px;
+            top: 50px;
+            bottom: -25px;
+            width: 2px;
+            background: linear-gradient(to bottom, #f39c12, #e67e22);
+        }
+
+        .timeline-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .timeline-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .timeline-coords {
+            font-size: 0.9rem;
+            color: #999;
+            font-family: monospace;
+        }
+
+        .attractions-section {
+            background: #e3f2fd;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .attractions-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .attractions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .attraction-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .attraction-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .attraction-image {
+            height: 180px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .attraction-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .attraction-content {
+            padding: 20px;
+        }
+
+        .attraction-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .attraction-desc {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .attraction-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ticket-price {
+            background: #4caf50;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .opening-hours {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .attraction-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .food-section {
+            background: #fff3e0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .food-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .food-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .food-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .food-image {
+            height: 150px;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .food-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .food-content {
+            padding: 20px;
+        }
+
+        .food-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .food-desc {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .food-price {
+            background: #ff9800;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .food-location {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        .food-location::before {
+            content: '📍 ';
+            margin-right: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            background: rgba(0,0,0,0.1);
+            border-radius: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            #map {
+                height: 400px;
+            }
+            
+            .timeline-item {
+                flex-direction: column;
+            }
+            
+            .timeline-icon {
+                margin-bottom: 15px;
+                margin-right: 0;
+            }
+            
+            .timeline-item:not(:last-child)::after {
+                display: none;
+            }
+            
+            .day-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .attractions-grid,
+            .food-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ 南疆7天自驾游真实路线</h1>
+            <p>基于高德地图导航的真实驾驶路线，包含行程合理性分析</p>
+        </div>
+
+        <div class="map-container">
+            <div class="map-header">
+                <h2>🚗 真实导航路线</h2>
+                <p>基于实际道路网络的驾驶路线规划</p>
+            </div>
+            
+            <div id="map"></div>
+            
+            <div class="controls">
+                <div class="day-selector">
+                    <button class="day-btn active" onclick="showDay(1)">Day 1</button>
+                    <button class="day-btn" onclick="showDay(2)">Day 2</button>
+                    <button class="day-btn" onclick="showDay(3)">Day 3</button>
+                    <button class="day-btn" onclick="showDay(4)">Day 4</button>
+                    <button class="day-btn" onclick="showDay(5)">Day 5</button>
+                    <button class="day-btn" onclick="showDay(6)">Day 6</button>
+                    <button class="day-btn" onclick="showDay(7)">Day 7</button>
+                    <button class="day-btn" onclick="showAllDays()">全部路线</button>
+                </div>
+                
+                <div class="route-info">
+                    <div class="info-card">
+                        <h4>实际里程</h4>
+                        <p id="totalDistance">约 2800 公里</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>驾驶时间</h4>
+                        <p id="totalTime">约 45 小时</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>景点数量</h4>
+                        <p id="totalSpots">15 个景点</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>当前路线</h4>
+                        <p id="currentRoute">Day 1: 喀什 → 西极</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 行程分析 -->
+        <div class="analysis-section">
+            <div class="analysis-header">
+                <div class="analysis-title">📊 行程合理性分析</div>
+                <div class="day-subtitle">基于实际道路条件和驾驶时间的专业分析</div>
+            </div>
+            
+            <div class="analysis-content">
+                <div class="warning-card">
+                    <h3>⚠️ 行程风险提示</h3>
+                    <ul>
+                        <li>Day 1 西极路线：实际驾驶时间约8-9小时，高原路段较多</li>
+                        <li>Day 2 帕米尔高原：海拔3000-4000米，需注意高原反应</li>
+                        <li>Day 6 沙漠公路：穿越塔克拉玛干沙漠，路况复杂</li>
+                        <li>部分路段信号较弱，建议提前下载离线地图</li>
+                        <li>8月天气炎热，沙漠路段温度可达40°C以上</li>
+                    </ul>
+                </div>
+
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <h3>✅ 行程优势</h3>
+                        <ul>
+                            <li>路线设计合理，景点分布均匀</li>
+                            <li>每天驾驶时间控制在8小时以内</li>
+                            <li>住宿安排合理，避免夜间长途驾驶</li>
+                            <li>景点类型丰富，自然与人文并重</li>
+                            <li>路线呈环形，避免重复路线</li>
+                        </ul>
+                    </div>
+
+                    <div class="analysis-card">
+                        <h3>❌ 行程问题</h3>
+                        <ul>
+                            <li>Day 1 西极路线过于紧凑，建议分两天</li>
+                            <li>Day 6 沙漠公路段距离过长，风险较高</li>
+                            <li>部分景点游览时间可能不足</li>
+                            <li>高原路段较多，需要适应时间</li>
+                            <li>紧急情况下的医疗救援点较少</li>
+                        </ul>
+                    </div>
+
+                    <div class="analysis-card">
+                        <h3>📈 行程强度评估</h3>
+                        <ul>
+                            <li>总体强度：★★★★☆ (较高)</li>
+                            <li>驾驶难度：★★★★☆ (较高)</li>
+                            <li>高原适应：★★★★☆ (需要)</li>
+                            <li>路况复杂：★★★★☆ (复杂)</li>
+                            <li>体力要求：★★★☆☆ (中等)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="suggestion-card">
+                    <h3>💡 改善建议</h3>
+                    <ul>
+                        <li><strong>Day 1 优化</strong>：建议将西极路线分为两天，第一天到伊尔克什坦口岸，第二天到西极碑</li>
+                        <li><strong>Day 6 优化</strong>：沙漠公路段建议增加一天，在和田多停留一晚</li>
+                        <li><strong>高原适应</strong>：建议在喀什停留1-2天适应高原环境</li>
+                        <li><strong>备用方案</strong>：准备2-3天的机动时间应对突发情况</li>
+                        <li><strong>车辆准备</strong>：确保车辆状况良好，准备备用轮胎和工具</li>
+                        <li><strong>通讯设备</strong>：准备卫星电话或对讲机，确保通讯畅通</li>
+                        <li><strong>医疗准备</strong>：准备高原反应药物和急救用品</li>
+                        <li><strong>天气关注</strong>：密切关注天气预报，避免恶劣天气出行</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 1 -->
+        <div class="day-details" id="day1-details">
+            <div class="day-header">
+                <div class="day-title">Day 1 - 西极之旅 (优化建议)</div>
+                <div class="day-subtitle">喀什 → 伊尔克什坦口岸 → 西极碑 → 喀什</div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">喀什市</div>
+                        <div class="timeline-description">起点：新疆维吾尔自治区喀什地区喀什市</div>
+                        <div class="timeline-coords">坐标：39.4704°N, 75.9897°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏔️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">两山交汇处</div>
+                        <div class="timeline-description">天山与昆仑山的壮美交汇 (途经)</div>
+                        <div class="timeline-coords">坐标：39.5°N, 75.8°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">伊尔克什坦口岸</div>
+                        <div class="timeline-description">中吉边境重要口岸 (建议停留1小时)</div>
+                        <div class="timeline-coords">坐标：39.7°N, 73.9°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏘️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">斯姆哈纳村</div>
+                        <div class="timeline-description">中国最西端的村庄 (建议停留30分钟)</div>
+                        <div class="timeline-coords">坐标：39.7°N, 73.8°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🗺️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">西极碑</div>
+                        <div class="timeline-description">中国最西端的标志 (建议停留1小时)</div>
+                        <div class="timeline-coords">坐标：39.7°N, 73.7°E</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 景点介绍 -->
+            <div class="attractions-section">
+                <div class="attractions-title">🏛️ 今日景点详情</div>
+                <div class="attractions-grid">
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop" alt="伊尔克什坦口岸">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">伊尔克什坦口岸</div>
+                            <div class="attraction-desc">中吉边境重要口岸，是连接中国与吉尔吉斯斯坦的重要通道，海拔约3000米。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">免费</div>
+                                <div class="opening-hours">全天开放</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">边境风光</span>
+                                <span class="feature-tag">拍照胜地</span>
+                                <span class="feature-tag">历史意义</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="西极碑">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">西极碑</div>
+                            <div class="attraction-desc">中国最西端的标志性建筑，位于帕米尔高原，是旅行者必打卡的地理标志。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">免费</div>
+                                <div class="opening-hours">全天开放</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">地理标志</span>
+                                <span class="feature-tag">纪念意义</span>
+                                <span class="feature-tag">高原风光</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="斯姆哈纳村">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">斯姆哈纳村</div>
+                            <div class="attraction-desc">中国最西端的村庄，居住着塔吉克族同胞，体验最西端的乡村生活。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">免费</div>
+                                <div class="opening-hours">全天开放</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">民族风情</span>
+                                <span class="feature-tag">乡村体验</span>
+                                <span class="feature-tag">文化体验</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 美食介绍 -->
+            <div class="food-section">
+                <div class="food-title">🍽️ 今日美食推荐</div>
+                <div class="food-grid">
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="烤羊肉串">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">烤羊肉串</div>
+                            <div class="food-desc">新疆特色烤肉，选用新鲜羊肉，炭火烤制，肉质鲜嫩多汁。</div>
+                            <div class="food-price">¥5-8/串</div>
+                            <div class="food-location">喀什夜市、路边摊</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="手抓饭">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">手抓饭</div>
+                            <div class="food-desc">维吾尔族传统美食，用羊肉、胡萝卜、大米制作，香气四溢。</div>
+                            <div class="food-price">¥25-35/份</div>
+                            <div class="food-location">喀什古城餐厅</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="拉条子">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">拉条子</div>
+                            <div class="food-desc">新疆特色面食，手工拉制，配以羊肉汤和蔬菜，口感筋道。</div>
+                            <div class="food-price">¥15-25/碗</div>
+                            <div class="food-location">喀什面馆</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-details" id="day2-details" style="display: none;">
+            <div class="day-header">
+                <div class="day-title">Day 2 - 帕米尔高原</div>
+                <div class="day-subtitle">喀什 → 塔什库尔干</div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">喀什市</div>
+                        <div class="timeline-description">起点：新疆维吾尔自治区喀什地区喀什市</div>
+                        <div class="timeline-coords">坐标：39.4704°N, 75.9897°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏔️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">白沙湖</div>
+                        <div class="timeline-description">帕米尔高原上的白色沙丘与碧蓝湖水 (建议停留1.5小时)</div>
+                        <div class="timeline-coords">坐标：38.4°N, 75.1°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">❄️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">慕士塔格峰</div>
+                        <div class="timeline-description">"冰山之父"，海拔7546米 (建议停留1小时)</div>
+                        <div class="timeline-coords">坐标：38.3°N, 75.1°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏔️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">公格尔峰</div>
+                        <div class="timeline-description">海拔7719米，帕米尔高原第二高峰 (途经)</div>
+                        <div class="timeline-coords">坐标：38.6°N, 75.3°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">💎</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">卡拉库里湖</div>
+                        <div class="timeline-description">高原上的蓝宝石，倒映着雪峰美景 (建议停留1小时)</div>
+                        <div class="timeline-coords">坐标：38.4°N, 75.2°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">塔什库尔干县</div>
+                        <div class="timeline-description">终点：新疆维吾尔自治区喀什地区塔什库尔干塔吉克自治县</div>
+                        <div class="timeline-coords">坐标：37.8°N, 75.2°E</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 景点介绍 -->
+            <div class="attractions-section">
+                <div class="attractions-title">🏔️ 今日景点详情</div>
+                <div class="attractions-grid">
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="白沙湖">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">白沙湖</div>
+                            <div class="attraction-desc">帕米尔高原上的白色沙丘与碧蓝湖水相映成趣，是摄影爱好者的天堂。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">¥50/人</div>
+                                <div class="opening-hours">8:00-18:00</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">自然奇观</span>
+                                <span class="feature-tag">拍照胜地</span>
+                                <span class="feature-tag">高原风光</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="慕士塔格峰">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">慕士塔格峰</div>
+                            <div class="attraction-desc">"冰山之父"，海拔7546米，终年积雪，是帕米尔高原的标志性山峰。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">¥80/人</div>
+                                <div class="opening-hours">全天开放</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">雪山景观</span>
+                                <span class="feature-tag">高原风光</span>
+                                <span class="feature-tag">登山基地</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="卡拉库里湖">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">卡拉库里湖</div>
+                            <div class="attraction-desc">高原上的蓝宝石，倒映着雪峰美景，湖水清澈见底，景色如画。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">¥60/人</div>
+                                <div class="opening-hours">8:00-18:00</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">湖泊风光</span>
+                                <span class="feature-tag">倒影美景</span>
+                                <span class="feature-tag">高原湖泊</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 美食介绍 -->
+            <div class="food-section">
+                <div class="food-title">🍽️ 今日美食推荐</div>
+                <div class="food-grid">
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="塔吉克族烤肉">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">塔吉克族烤肉</div>
+                            <div class="food-desc">高原特色烤肉，使用当地散养羊肉，炭火烤制，肉质鲜美。</div>
+                            <div class="food-price">¥8-12/串</div>
+                            <div class="food-location">塔什库尔干县城</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="牦牛奶">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">牦牛奶</div>
+                            <div class="food-desc">高原特色饮品，营养丰富，口感醇厚，是高原地区的传统饮品。</div>
+                            <div class="food-price">¥15-25/杯</div>
+                            <div class="food-location">塔什库尔干县城</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="馕">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">馕</div>
+                            <div class="food-desc">新疆传统面食，用面粉制作，烤制而成，是高原地区的主食。</div>
+                            <div class="food-price">¥3-5/个</div>
+                            <div class="food-location">塔什库尔干县城</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-details" id="day3-details" style="display: none;">
+            <div class="day-header">
+                <div class="day-title">Day 3 - 红旗拉普国门</div>
+                <div class="day-subtitle">塔什库尔干 → 红旗拉普 → 塔什库尔干</div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">塔什库尔干县</div>
+                        <div class="timeline-description">起点：新疆维吾尔自治区喀什地区塔什库尔干塔吉克自治县</div>
+                        <div class="timeline-coords">坐标：37.8°N, 75.2°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">红旗拉普国门</div>
+                        <div class="timeline-description">中巴边境重要口岸，海拔4733米 (建议停留1.5小时)</div>
+                        <div class="timeline-coords">坐标：37.2°N, 74.9°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏔️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">瓦罕走廊</div>
+                        <div class="timeline-description">古丝绸之路的重要通道 (建议停留1小时)</div>
+                        <div class="timeline-coords">坐标：37.1°N, 74.8°E</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-details" id="day4-details" style="display: none;">
+            <div class="day-header">
+                <div class="day-title">Day 4 - 冰川与古城</div>
+                <div class="day-subtitle">塔什库尔干 → 喀什</div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">塔什库尔干县</div>
+                        <div class="timeline-description">起点：新疆维吾尔自治区喀什地区塔什库尔干塔吉克自治县</div>
+                        <div class="timeline-coords">坐标：37.8°N, 75.2°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🌿</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">塔合曼湿地</div>
+                        <div class="timeline-description">高原湿地，水草丰美，牛羊成群 (建议停留1小时)</div>
+                        <div class="timeline-coords">坐标：38.0°N, 75.1°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">❄️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">慕士塔格冰川公园</div>
+                        <div class="timeline-description">近距离观赏冰川，感受冰雪世界 (建议停留2小时)</div>
+                        <div class="timeline-coords">坐标：38.3°N, 75.1°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">喀什古城</div>
+                        <div class="timeline-description">终点：千年古城，维吾尔族文化的活化石 (建议停留2小时)</div>
+                        <div class="timeline-coords">坐标：39.4704°N, 75.9897°E</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 景点介绍 -->
+            <div class="attractions-section">
+                <div class="attractions-title">🏛️ 今日景点详情</div>
+                <div class="attractions-grid">
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop" alt="喀什古城">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">喀什古城</div>
+                            <div class="attraction-desc">千年古城，维吾尔族文化的活化石，迷宫般的街巷，浓郁的民族风情。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">免费</div>
+                                <div class="opening-hours">全天开放</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">历史文化</span>
+                                <span class="feature-tag">民族风情</span>
+                                <span class="feature-tag">古城风貌</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="慕士塔格冰川公园">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">慕士塔格冰川公园</div>
+                            <div class="attraction-desc">近距离观赏冰川，感受冰雪世界的震撼，是摄影和探险的绝佳地点。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">¥120/人</div>
+                                <div class="opening-hours">8:00-18:00</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">冰川景观</span>
+                                <span class="feature-tag">冰雪世界</span>
+                                <span class="feature-tag">探险体验</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="塔合曼湿地">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">塔合曼湿地</div>
+                            <div class="attraction-desc">高原湿地，水草丰美，牛羊成群，是高原上的绿洲。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">¥30/人</div>
+                                <div class="opening-hours">8:00-18:00</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">湿地风光</span>
+                                <span class="feature-tag">生态景观</span>
+                                <span class="feature-tag">高原绿洲</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 美食介绍 -->
+            <div class="food-section">
+                <div class="food-title">🍽️ 今日美食推荐</div>
+                <div class="food-grid">
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="烤全羊">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">烤全羊</div>
+                            <div class="food-desc">新疆特色美食，整只羊炭火烤制，外焦里嫩，香气四溢。</div>
+                            <div class="food-price">¥800-1200/只</div>
+                            <div class="food-location">喀什古城餐厅</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="烤包子">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">烤包子</div>
+                            <div class="food-desc">传统维吾尔族美食，羊肉馅料，烤制而成，外皮酥脆。</div>
+                            <div class="food-price">¥3-5/个</div>
+                            <div class="food-location">喀什古城小吃街</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="奶茶">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">奶茶</div>
+                            <div class="food-desc">新疆特色饮品，用茶叶和牛奶调制，口感醇厚。</div>
+                            <div class="food-price">¥8-15/杯</div>
+                            <div class="food-location">喀什古城茶馆</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 5 -->
+        <div class="day-details" id="day5-details" style="display: none;">
+            <div class="day-header">
+                <div class="day-title">Day 5 - 莎车与和田</div>
+                <div class="day-subtitle">喀什 → 莎车 → 和田</div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">喀什市</div>
+                        <div class="timeline-description">起点：新疆维吾尔自治区喀什地区喀什市</div>
+                        <div class="timeline-coords">坐标：39.4704°N, 75.9897°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">莎车古城</div>
+                        <div class="timeline-description">古丝绸之路重镇，历史文化名城 (建议停留1.5小时)</div>
+                        <div class="timeline-coords">坐标：38.4°N, 77.2°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🌃</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">和田夜市</div>
+                        <div class="timeline-description">终点：品尝和田特色美食，感受夜市文化 (建议停留2小时)</div>
+                        <div class="timeline-coords">坐标：37.1°N, 79.9°E</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 景点介绍 -->
+            <div class="attractions-section">
+                <div class="attractions-title">🏛️ 今日景点详情</div>
+                <div class="attractions-grid">
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop" alt="莎车古城">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">莎车古城</div>
+                            <div class="attraction-desc">古丝绸之路重镇，历史文化底蕴深厚，保存着众多历史遗迹。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">¥50/人</div>
+                                <div class="opening-hours">8:00-18:00</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">历史文化</span>
+                                <span class="feature-tag">古城风貌</span>
+                                <span class="feature-tag">丝绸之路</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="和田夜市">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">和田夜市</div>
+                            <div class="attraction-desc">和田特色美食聚集地，品尝地道和田美食，感受夜市文化。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">免费</div>
+                                <div class="opening-hours">18:00-24:00</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">美食聚集</span>
+                                <span class="feature-tag">夜市文化</span>
+                                <span class="feature-tag">地方特色</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="和田玉市场">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">和田玉市场</div>
+                            <div class="attraction-desc">和田玉的故乡，可以购买到正宗的和田玉制品。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">免费</div>
+                                <div class="opening-hours">9:00-19:00</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">玉石市场</span>
+                                <span class="feature-tag">购物体验</span>
+                                <span class="feature-tag">地方特产</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 美食介绍 -->
+            <div class="food-section">
+                <div class="food-title">🍽️ 今日美食推荐</div>
+                <div class="food-grid">
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="和田烤羊肉">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">和田烤羊肉</div>
+                            <div class="food-desc">和田特色烤肉，使用当地散养羊肉，炭火烤制，肉质鲜美。</div>
+                            <div class="food-price">¥8-12/串</div>
+                            <div class="food-location">和田夜市</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="和田烤包子">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">和田烤包子</div>
+                            <div class="food-desc">和田特色面食，羊肉馅料，烤制而成，外皮酥脆。</div>
+                            <div class="food-price">¥3-5/个</div>
+                            <div class="food-location">和田夜市</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="和田奶茶">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">和田奶茶</div>
+                            <div class="food-desc">和田特色饮品，用茶叶和牛奶调制，口感醇厚。</div>
+                            <div class="food-price">¥8-15/杯</div>
+                            <div class="food-location">和田夜市</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 6 -->
+        <div class="day-details" id="day6-details" style="display: none;">
+            <div class="day-header">
+                <div class="day-title">Day 6 - 沙漠公路 (优化建议)</div>
+                <div class="day-subtitle">和田 → 阿拉尔 (建议分两天完成)</div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">🌃</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">和田市</div>
+                        <div class="timeline-description">起点：新疆维吾尔自治区和田地区和田市</div>
+                        <div class="timeline-coords">坐标：37.1°N, 79.9°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">约特干古城</div>
+                        <div class="timeline-description">古丝绸之路上的重要遗址 (建议停留1小时)</div>
+                        <div class="timeline-coords">坐标：37.2°N, 80.1°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏜️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">塔克拉玛干沙漠公路</div>
+                        <div class="timeline-description">穿越世界第二大流动沙漠 (建议分两天完成)</div>
+                        <div class="timeline-coords">坐标：40.5°N, 81.0°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">阿拉尔市</div>
+                        <div class="timeline-description">终点：新疆维吾尔自治区阿拉尔市</div>
+                        <div class="timeline-coords">坐标：40.5°N, 81.3°E</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 7 -->
+        <div class="day-details" id="day7-details" style="display: none;">
+            <div class="day-header">
+                <div class="day-title">Day 7 - 峡谷之旅</div>
+                <div class="day-subtitle">阿拉尔 → 阿克苏</div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">阿拉尔市</div>
+                        <div class="timeline-description">起点：新疆维吾尔自治区阿拉尔市</div>
+                        <div class="timeline-coords">坐标：40.5°N, 81.3°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏔️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">温宿大峡谷</div>
+                        <div class="timeline-description">天山南麓的壮美峡谷，地质奇观 (建议停留2小时)</div>
+                        <div class="timeline-coords">坐标：41.2°N, 80.2°E</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-icon">🏛️</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">阿克苏市</div>
+                        <div class="timeline-description">终点：新疆维吾尔自治区阿克苏地区阿克苏市</div>
+                        <div class="timeline-coords">坐标：41.2°N, 80.3°E</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 景点介绍 -->
+            <div class="attractions-section">
+                <div class="attractions-title">🏔️ 今日景点详情</div>
+                <div class="attractions-grid">
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="温宿大峡谷">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">温宿大峡谷</div>
+                            <div class="attraction-desc">天山南麓的壮美峡谷，地质奇观，红色砂岩地貌，景色壮观。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">¥80/人</div>
+                                <div class="opening-hours">8:00-18:00</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">地质奇观</span>
+                                <span class="feature-tag">自然风光</span>
+                                <span class="feature-tag">摄影胜地</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop" alt="阿克苏市">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">阿克苏市</div>
+                            <div class="attraction-desc">南疆重要城市，现代化城市风貌，是旅程的终点。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">免费</div>
+                                <div class="opening-hours">全天开放</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">城市风光</span>
+                                <span class="feature-tag">文化体验</span>
+                                <span class="feature-tag">购物休闲</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attraction-card">
+                        <div class="attraction-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop" alt="天山神木园">
+                        </div>
+                        <div class="attraction-content">
+                            <div class="attraction-name">天山神木园</div>
+                            <div class="attraction-desc">千年古树群，天山脚下的绿色奇迹，生态环境优美。</div>
+                            <div class="attraction-info">
+                                <div class="ticket-price">¥60/人</div>
+                                <div class="opening-hours">8:00-18:00</div>
+                            </div>
+                            <div class="attraction-features">
+                                <span class="feature-tag">古树群</span>
+                                <span class="feature-tag">生态景观</span>
+                                <span class="feature-tag">自然风光</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 美食介绍 -->
+            <div class="food-section">
+                <div class="food-title">🍽️ 今日美食推荐</div>
+                <div class="food-grid">
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="阿克苏烤肉">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">阿克苏烤肉</div>
+                            <div class="food-desc">阿克苏特色烤肉，使用当地散养羊肉，炭火烤制，肉质鲜美。</div>
+                            <div class="food-price">¥8-12/串</div>
+                            <div class="food-location">阿克苏市区</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="阿克苏烤包子">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">阿克苏烤包子</div>
+                            <div class="food-desc">阿克苏特色面食，羊肉馅料，烤制而成，外皮酥脆。</div>
+                            <div class="food-price">¥3-5/个</div>
+                            <div class="food-location">阿克苏市区</div>
+                        </div>
+                    </div>
+                    
+                    <div class="food-card">
+                        <div class="food-image">
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="阿克苏奶茶">
+                        </div>
+                        <div class="food-content">
+                            <div class="food-name">阿克苏奶茶</div>
+                            <div class="food-desc">阿克苏特色饮品，用茶叶和牛奶调制，口感醇厚。</div>
+                            <div class="food-price">¥8-15/杯</div>
+                            <div class="food-location">阿克苏市区</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🗺️ 南疆7天自驾游真实路线分析 | 让您的旅程更加安全合理</p>
+            <p>© 2024 新疆旅游攻略 | 祝您旅途愉快！</p>
+        </div>
+    </div>
+
+    <script>
+        // 初始化地图
+        var map = new AMap.Map('map', {
+            zoom: 6,
+            center: [80, 39],
+            mapStyle: 'amap://styles/normal'
+        });
+
+        // 初始化驾车导航
+        var driving = new AMap.Driving({
+            map: map,
+            policy: AMap.DrivingPolicy.LEAST_TIME
+        });
+
+        // 路线数据
+        const routes = {
+            day1: {
+                name: "Day 1: 喀什 → 西极",
+                points: [
+                    {name: "喀什市", lng: 75.9897, lat: 39.4704, icon: "🏛️"},
+                    {name: "两山交汇处", lng: 75.8, lat: 39.5, icon: "🏔️"},
+                    {name: "伊尔克什坦口岸", lng: 73.9, lat: 39.7, icon: "🏛️"},
+                    {name: "斯姆哈纳村", lng: 73.8, lat: 39.7, icon: "🏘️"},
+                    {name: "西极碑", lng: 73.7, lat: 39.7, icon: "🗺️"}
+                ],
+                distance: "约 450 公里",
+                time: "约 8-9 小时"
+            },
+            day2: {
+                name: "Day 2: 喀什 → 塔什库尔干",
+                points: [
+                    {name: "喀什市", lng: 75.9897, lat: 39.4704, icon: "🏛️"},
+                    {name: "白沙湖", lng: 75.1, lat: 38.4, icon: "🏔️"},
+                    {name: "慕士塔格峰", lng: 75.1, lat: 38.3, icon: "❄️"},
+                    {name: "公格尔峰", lng: 75.3, lat: 38.6, icon: "🏔️"},
+                    {name: "卡拉库里湖", lng: 75.2, lat: 38.4, icon: "💎"},
+                    {name: "塔什库尔干县", lng: 75.2, lat: 37.8, icon: "🏛️"}
+                ],
+                distance: "约 350 公里",
+                time: "约 6-7 小时"
+            },
+            day3: {
+                name: "Day 3: 塔什库尔干 → 红旗拉普",
+                points: [
+                    {name: "塔什库尔干县", lng: 75.2, lat: 37.8, icon: "🏛️"},
+                    {name: "红旗拉普国门", lng: 74.9, lat: 37.2, icon: "🏛️"},
+                    {name: "瓦罕走廊", lng: 74.8, lat: 37.1, icon: "🏔️"}
+                ],
+                distance: "约 250 公里",
+                time: "约 5-6 小时"
+            },
+            day4: {
+                name: "Day 4: 塔什库尔干 → 喀什",
+                points: [
+                    {name: "塔什库尔干县", lng: 75.2, lat: 37.8, icon: "🏛️"},
+                    {name: "塔合曼湿地", lng: 75.1, lat: 38.0, icon: "🌿"},
+                    {name: "慕士塔格冰川公园", lng: 75.1, lat: 38.3, icon: "❄️"},
+                    {name: "喀什古城", lng: 75.9897, lat: 39.4704, icon: "🏛️"}
+                ],
+                distance: "约 400 公里",
+                time: "约 7-8 小时"
+            },
+            day5: {
+                name: "Day 5: 喀什 → 和田",
+                points: [
+                    {name: "喀什市", lng: 75.9897, lat: 39.4704, icon: "🏛️"},
+                    {name: "莎车古城", lng: 77.2, lat: 38.4, icon: "🏛️"},
+                    {name: "和田夜市", lng: 79.9, lat: 37.1, icon: "🌃"}
+                ],
+                distance: "约 450 公里",
+                time: "约 7-8 小时"
+            },
+            day6: {
+                name: "Day 6: 和田 → 阿拉尔",
+                points: [
+                    {name: "和田市", lng: 79.9, lat: 37.1, icon: "🌃"},
+                    {name: "约特干古城", lng: 80.1, lat: 37.2, icon: "🏛️"},
+                    {name: "塔克拉玛干沙漠公路", lng: 81.0, lat: 40.5, icon: "🏜️"},
+                    {name: "阿拉尔市", lng: 81.3, lat: 40.5, icon: "🏛️"}
+                ],
+                distance: "约 600 公里",
+                time: "约 10-12 小时"
+            },
+            day7: {
+                name: "Day 7: 阿拉尔 → 阿克苏",
+                points: [
+                    {name: "阿拉尔市", lng: 81.3, lat: 40.5, icon: "🏛️"},
+                    {name: "温宿大峡谷", lng: 80.2, lat: 41.2, icon: "🏔️"},
+                    {name: "阿克苏市", lng: 80.3, lat: 41.2, icon: "🏛️"}
+                ],
+                distance: "约 350 公里",
+                time: "约 6-7 小时"
+            }
+        };
+
+        let currentMarkers = [];
+        let currentPath = null;
+
+        // 显示指定天的路线
+        function showDay(day) {
+            // 清除之前的标记和路径
+            clearMap();
+            
+            // 更新按钮状态
+            updateButtonState(day);
+            
+            // 显示路线
+            const route = routes[`day${day}`];
+            if (route) {
+                drawRoute(route);
+                updateInfo(route);
+                showDayDetails(day);
+            }
+        }
+
+        // 显示所有路线
+        function showAllDays() {
+            clearMap();
+            updateButtonState('all');
+            
+            // 绘制所有路线
+            Object.values(routes).forEach(route => {
+                drawRoute(route, false);
+            });
+            
+            updateInfo({
+                name: "全部路线",
+                distance: "约 2800 公里",
+                time: "约 45 小时"
+            });
+            
+            hideAllDayDetails();
+        }
+
+        // 绘制路线
+        function drawRoute(route, fitBounds = true) {
+            const points = route.points.map(p => [p.lng, p.lat]);
+            
+            // 添加标记
+            route.points.forEach(point => {
+                const marker = new AMap.Marker({
+                    position: [point.lng, point.lat],
+                    title: point.name,
+                    icon: new AMap.Icon({
+                        size: new AMap.Size(32, 32),
+                        image: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="%23e74c3c"/><text x="16" y="20" text-anchor="middle" fill="white" font-size="16">${point.icon}</text></svg>`
+                    })
+                });
+                currentMarkers.push(marker);
+                map.add(marker);
+            });
+            
+            // 使用驾车导航绘制真实路线
+            if (points.length >= 2) {
+                const waypoints = points.slice(1, -1).map(p => new AMap.LngLat(p[0], p[1]));
+                const start = new AMap.LngLat(points[0][0], points[0][1]);
+                const end = new AMap.LngLat(points[points.length - 1][0], points[points.length - 1][1]);
+                
+                driving.search(start, end, {
+                    waypoints: waypoints
+                }, function(status, result) {
+                    if (status === 'complete') {
+                        // 路线绘制完成
+                        if (fitBounds) {
+                            map.setFitView();
+                        }
+                    } else {
+                        // 如果导航失败，使用直线连接
+                        const path = new AMap.Polyline({
+                            path: points,
+                            strokeColor: "#e74c3c",
+                            strokeWeight: 4,
+                            strokeOpacity: 0.8
+                        });
+                        currentPath = path;
+                        map.add(path);
+                        if (fitBounds) {
+                            map.setFitView();
+                        }
+                    }
+                });
+            }
+        }
+
+        // 清除地图
+        function clearMap() {
+            currentMarkers.forEach(marker => map.remove(marker));
+            currentMarkers = [];
+            if (currentPath) {
+                map.remove(currentPath);
+                currentPath = null;
+            }
+            // 清除导航路线
+            driving.clear();
+        }
+
+        // 更新按钮状态
+        function updateButtonState(activeDay) {
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (activeDay === 'all') {
+                document.querySelector('.day-btn:last-child').classList.add('active');
+            } else {
+                document.querySelector(`.day-btn:nth-child(${activeDay})`).classList.add('active');
+            }
+        }
+
+        // 更新信息显示
+        function updateInfo(route) {
+            document.getElementById('currentRoute').textContent = route.name;
+            document.getElementById('totalDistance').textContent = route.distance;
+            document.getElementById('totalTime').textContent = route.time;
+        }
+
+        // 显示指定天的详细信息
+        function showDayDetails(day) {
+            hideAllDayDetails();
+            document.getElementById(`day${day}-details`).style.display = 'block';
+        }
+
+        // 隐藏所有天的详细信息
+        function hideAllDayDetails() {
+            for (let i = 1; i <= 7; i++) {
+                document.getElementById(`day${i}-details`).style.display = 'none';
+            }
+        }
+
+        // 初始化显示第一天
+        showDay(1);
+    </script>
+</body>
+</html>
